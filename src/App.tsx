@@ -66,10 +66,10 @@ const theme = createTheme({
 
 function App() {
 
-	// ToDo:
-	// add custom ciphers
-	// add graph for cipher-distribution
-	// adjust alphabet table
+	// ToDo: add custom ciphers
+	// ToDo: add graph for cipher-distribution
+	// ToDo: adjust alphabet table
+	// ToDo: make cipher alphabet adjustable
 
 
 	// Encoded Message
