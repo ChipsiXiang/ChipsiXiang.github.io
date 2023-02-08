@@ -65,10 +65,14 @@ const theme = createTheme({
 
 function App() {
 
+	// ToDo:
+	// add custom ciphers
+	// add graph for cipher-distribution
+	// adjust alphabet table
+
 
 	// Encoded Message
 	const [cipher, setCipher] = useState<string>('PR ERG HRXS SIG HBLHF MRIG LXS ERG HRXS SIG JUUVHBI HBLHF SIH YIHFQBIX FVNRH')
-	const [spacedCipher, setSpacedCipher] = useState<string>(cipher.split(' ').join(' | '))
 
 	// defaultAlphabet with pattern:
 	// Cipher | #CipherOccurenceInMessage | Decoded Cipher
@@ -109,7 +113,7 @@ function App() {
 
 	// splitting Message States
 	const [splitCipher, setSplitCipher] = useState<string[]>(cipher.split(' '))
-	const [showSplitDeciphered, setShowSplitDeciphered] = useState<boolean>(true)
+	const [showAlphabet, setShowAlphabet] = useState<boolean>(true)
 
 	const getSplitLines = () => {
 		const lines = []
@@ -117,10 +121,14 @@ function App() {
 			lines.push(
 				<Stack
 					direction='row'
-					p='1rem 0 0 2rem'
+					p='1rem 1.25rem'
+					sx={{
+						display: 'flex',
+						alignItems: 'center'
+					}}
 				>
 					{
-						getCipherTextFields(s)
+						getCipherWithInteractiveTextFields(s)
 					}
 				</Stack>
 			)
@@ -130,12 +138,12 @@ function App() {
 				display='flex'
 				direction='row'
 				flexWrap='wrap'
-				p='0 3rem'
+				p='4rem 3rem 0'
 			>
 				{lines}
 			</Stack>)
 	}
-	const getCipherTextFields = (s: string) => {
+	const getCipherWithInteractiveTextFields = (s: string) => {
 		const textFields = []
 		for(let i = 0; i < s.length; i++) {
 			const decipheredIndex = alphabet.findIndex((a) => a[0] === s[i])
@@ -173,16 +181,13 @@ function App() {
 
 	useEffect(() => {
 		let newMessage = ''
-		let newMessageWithoutPipes = ''
 		for (let i = 0; i < cipher.length; i++) {
 			for (let k = 0; k < alphabet.length; k++) {
 				if (cipher[i] === alphabet[k][0]) {
 					newMessage += alphabet[k][2]
-					newMessageWithoutPipes += alphabet[k][2]
 					break
 				} else if (cipher[i] === ' ') {
-					newMessage += ' | '
-					newMessageWithoutPipes += ' '
+					newMessage += ' '
 					break
 				}
 			}
@@ -223,71 +228,34 @@ function App() {
 					Leni Decoder Tool
 					</Typography>
 				</Grid>
-				<Grid item xs={12}>
-					<Typography variant='h4' sx={{textDecoration: 'underline'}}>
+				<Grid item xs={12} md={6}>
+					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						CIPHER
 					</Typography>
-					<Typography variant='h4' pt='2rem'>
+					<Typography variant='h4' textAlign='left'>
 						{cipher}
 					</Typography>
 				</Grid>
-				<Grid item xs={12}>
-					<Typography variant='h4' sx={{textDecoration: 'underline'}}>
+				<Grid item xs={12} md={6}>
+					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						DECODING
 					</Typography>
+					<Typography variant='h4' textAlign='left'>
+						{deciphered}
+					</Typography>
+				</Grid>
+				{
+					getSplitLines()
+				}
+				<Grid item xs={12}>
 					<Button
 						variant='outlined'
 						color='info'
 						sx={{ fontSize: '1.75rem', m: '2rem' }}
-						onClick={() => setShowSplitDeciphered(!showSplitDeciphered)}
+						onClick={() => setShowAlphabet(!showAlphabet)}
 					>
-						Toggle Text
+						{ showAlphabet ? 'Hide Alphabet' : 'Show Alphabet' }
 					</Button>
-				</Grid>
-				{ showSplitDeciphered
-					&& (
-						<Grid item xs={12} pb={'4rem'}>
-							<Typography variant='h4' alignSelf='center'>
-								{/*{spacedCipher}*/}
-								{/*<br />*/}
-								{deciphered}
-							</Typography>
-						</Grid>
-					)
-				}
-				{
-					getSplitLines()
-				}
-				<Grid
-					item
-					direction='column'
-					xs={12}
-					overflow='auto'
-				>
-					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
-						ALPHABET
-					</Typography>
-					<Table>
-						<TableHead>
-							<TableRow>
-								{defaultAlphabet.map((c, index) => (
-									<TableCell
-										key={`cAlphabet-${index}`}
-										align='center'
-									>
-										{`${c[0]} (${c[1]})`}
-									</TableCell>
-								))}
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							<TableRow>
-								{
-									getDecodedFields()
-								}
-							</TableRow>
-						</TableBody>
-					</Table>
 					<Button
 						variant='outlined'
 						color='error'
@@ -297,6 +265,42 @@ function App() {
 						Reset Alphabet
 					</Button>
 				</Grid>
+				{ showAlphabet
+					&& (
+						<Grid
+							item
+							direction='column'
+							xs={12}
+							overflow='auto'
+						>
+							<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
+								ALPHABET
+							</Typography>
+							<Table sx={{border: '1px solid white'}}>
+								<TableHead>
+									<TableRow>
+										{defaultAlphabet.map((c, index) => (
+											<TableCell
+												key={`cAlphabet-${index}`}
+												align='center'
+											>
+												{`${c[0]} (${c[1]})`}
+											</TableCell>
+										))}
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									<TableRow>
+										{
+											getDecodedFields()
+										}
+									</TableRow>
+								</TableBody>
+							</Table>
+						</Grid>
+					)
+				}
+
 			</Grid>
 		</ThemeProvider>
 	)
