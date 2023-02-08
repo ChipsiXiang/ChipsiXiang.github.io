@@ -1,16 +1,17 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import {
-	alpha, Button, createTheme,
-	Divider, GlobalStyles,
-	Grid, Stack,
-	styled,
+	Button,
+	createTheme,
+	Grid,
+	Stack,
 	Table,
 	TableBody,
 	TableCell,
 	TableHead,
 	TableRow,
-	TextField, ThemeProvider,
+	TextField,
+	ThemeProvider,
 	Typography
 } from '@mui/material'
 import {grey} from '@mui/material/colors'
@@ -228,7 +229,7 @@ function App() {
 					Leni Decoder Tool
 					</Typography>
 				</Grid>
-				<Grid item xs={12} md={6}>
+				<Grid item xs={6}>
 					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						CIPHER
 					</Typography>
@@ -236,7 +237,7 @@ function App() {
 						{cipher}
 					</Typography>
 				</Grid>
-				<Grid item xs={12} md={6}>
+				<Grid item xs={6}>
 					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						DECODING
 					</Typography>
