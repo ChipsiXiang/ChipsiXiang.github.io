@@ -3,7 +3,7 @@ import './App.css'
 import {
 	alpha, Button, createTheme,
 	Divider, GlobalStyles,
-	Grid,
+	Grid, Stack,
 	styled,
 	Table,
 	TableBody,
@@ -29,7 +29,8 @@ const theme = createTheme({
 	typography: {
 		fontFamily: 'monospace',
 		allVariants: {
-			color: mainWhite
+			color: mainWhite,
+			letterSpacing: 4
 		},
 	},
 	components: {
@@ -38,6 +39,9 @@ const theme = createTheme({
 				root: {
 					border: `1px solid ${mainWhite}`,
 					borderRadius: '4px',
+					input: {
+						color: mainWhite
+					}
 				}
 			}
 		},
@@ -87,7 +91,6 @@ function App() {
 		['J', 0, '_'],
 		['Q', 0, '_'],
 		['N', 0, '_'],
-		[' ', 0, ' | ']
 	]
 
 	// count occurrences of cipher in message
@@ -105,9 +108,62 @@ function App() {
 	const [alphabet, setAlphabet] = useState<[string, number, string][]>(defaultAlphabet)
 
 	// splitting Message States
-	const [splitCipher, setSplitCipher] = useState<string[]>(cipher.match(/.{1,100}/g) ?? [])
-	const [splitDeciphered, setSplitDeciphered] = useState<string[]>(deciphered.match(/.{1,100}/g) ?? [])
+	const [splitCipher, setSplitCipher] = useState<string[]>(cipher.split(' '))
+	const [showSplitDeciphered, setShowSplitDeciphered] = useState<boolean>(true)
 
+	const getSplitLines = () => {
+		const lines = []
+		for(const s of splitCipher) {
+			lines.push(
+				<Stack
+					direction='row'
+					p='1rem 0 0 2rem'
+				>
+					{
+						getCipherTextFields(s)
+					}
+				</Stack>
+			)
+		}
+		return (
+			<Stack
+				display='flex'
+				direction='row'
+				flexWrap='wrap'
+				p='0 3rem'
+			>
+				{lines}
+			</Stack>)
+	}
+	const getCipherTextFields = (s: string) => {
+		const textFields = []
+		for(let i = 0; i < s.length; i++) {
+			const decipheredIndex = alphabet.findIndex((a) => a[0] === s[i])
+			textFields.push(
+				<Stack direction='column'>
+					<Typography variant='h4'>
+						{s[i]}
+					</Typography>
+					<TextField
+						value={alphabet[decipheredIndex][2]}
+						sx={{
+							input: {
+								textAlign: 'center',
+								fontSize: '1.75rem',
+								fontWeight: 'bold'
+							},
+							width: '3rem',
+						}}
+						onFocus={(e) => e.target.select()}
+						onChange={(e) => handleChange(e.target.value, decipheredIndex)}
+					/>
+				</Stack>
+			)
+		}
+		return (
+			textFields
+		)
+	}
 
 	const handleChange = (s: string, i: number) => {
 		const tmp = [...alphabet]
@@ -117,19 +173,22 @@ function App() {
 
 	useEffect(() => {
 		let newMessage = ''
+		let newMessageWithoutPipes = ''
 		for (let i = 0; i < cipher.length; i++) {
 			for (let k = 0; k < alphabet.length; k++) {
 				if (cipher[i] === alphabet[k][0]) {
 					newMessage += alphabet[k][2]
+					newMessageWithoutPipes += alphabet[k][2]
+					break
+				} else if (cipher[i] === ' ') {
+					newMessage += ' | '
+					newMessageWithoutPipes += ' '
+					break
 				}
 			}
 		}
 		setDeciphered(newMessage)
 	}, [alphabet])
-
-	useEffect(() => {
-		setSplitDeciphered(deciphered.match(/.{1,100}/g) ?? [])
-	}, [deciphered])
 
 	const getDecodedFields = () => {
 		return alphabet.map((c, index) => (
@@ -165,29 +224,50 @@ function App() {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Typography variant='h4'>
+					<Typography variant='h4' sx={{textDecoration: 'underline'}}>
 						CIPHER
-						<br />
-						<br />
+					</Typography>
+					<Typography variant='h4' pt='2rem'>
 						{cipher}
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Typography variant='h4'>
-					DECODING
-						<br />
-						<br />
-						{spacedCipher}
-						<br />
-						{deciphered}
+					<Typography variant='h4' sx={{textDecoration: 'underline'}}>
+						DECODING
 					</Typography>
+					<Button
+						variant='outlined'
+						color='info'
+						sx={{ fontSize: '1.75rem', m: '2rem' }}
+						onClick={() => setShowSplitDeciphered(!showSplitDeciphered)}
+					>
+						Toggle Text
+					</Button>
 				</Grid>
+				{ showSplitDeciphered
+					&& (
+						<Grid item xs={12} pb={'4rem'}>
+							<Typography variant='h4' alignSelf='center'>
+								{/*{spacedCipher}*/}
+								{/*<br />*/}
+								{deciphered}
+							</Typography>
+						</Grid>
+					)
+				}
+				{
+					getSplitLines()
+				}
 				<Grid
 					item
 					direction='column'
 					xs={12}
+					overflow='auto'
 				>
-					<Table sx={{ width: '100%' }}>
+					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
+						ALPHABET
+					</Typography>
+					<Table>
 						<TableHead>
 							<TableRow>
 								{defaultAlphabet.map((c, index) => (
@@ -211,7 +291,7 @@ function App() {
 					<Button
 						variant='outlined'
 						color='error'
-						sx={{ fontSize: '1.75rem', mt: '2rem' }}
+						sx={{ fontSize: '1.75rem', m: '2rem' }}
 						onClick={() => setAlphabet(defaultAlphabet)}
 					>
 						Reset Alphabet
