@@ -1,26 +1,192 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ReactNode, useEffect, useState } from 'react'
+import './App.css'
+import {
+	alpha, Button, createTheme,
+	Divider, GlobalStyles,
+	Grid,
+	styled,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	TextField, ThemeProvider,
+	Typography
+} from '@mui/material'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+	const WhiteBorderTextField = styled(TextField)`
+		color: white;
+		border-color: white;
+		& label.Mui-focused {
+			color: white;
+		}
+		& .MuiOutlinedInput-root {
+			&.Mui-focused fieldset {
+				border-color: white;
+			}
+		}`
+
+
+	// Encoded Message
+	const [cipher, setCipher] = useState<string>('PR ERG HRXS SIG HBLHF MRIG LXS ERG HRXS SIG JUUVHBI HBLHF SIH YIHFQBIX FVNRH')
+	const [spacedCipher, setSpacedCipher] = useState<string>(cipher.split(' ').join(' | '))
+
+	// defaultAlphabet with pattern:
+	// Cipher | #CipherOccurenceInMessage | Decoded Cipher
+	let defaultAlphabet: [string, number, string][] = [
+		['H', 0, '_'],
+		['I', 0, '_'],
+		['R', 0, '_'],
+		['S', 0, '_'],
+		['G', 0, '_'],
+		['X', 0, '_'],
+		['B', 0, '_'],
+		['F', 0, '_'],
+		['L', 0, '_'],
+		['U', 0, '_'],
+		['V', 0, '_'],
+		['E', 0, '_'],
+		['P', 0, '_'],
+		['Y', 0, '_'],
+		['M', 0, '_'],
+		['J', 0, '_'],
+		['Q', 0, '_'],
+		['N', 0, '_'],
+		[' ', 0, ' | ']
+	]
+
+	// count occurrences of cipher in message
+	for (let i = 0; i < defaultAlphabet.length; i++) {
+		for (let k = 0; k < cipher.length; k++) {
+			if (defaultAlphabet[i][0] === cipher[k]) {
+				defaultAlphabet[i][1]++
+			}
+		}
+	}
+	defaultAlphabet = defaultAlphabet.sort((a, b) => b[1] - (a[1]))
+
+	//other states
+	const [deciphered, setDeciphered] = useState<string>('')
+	const [alphabet, setAlphabet] = useState<[string, number, string][]>(defaultAlphabet)
+
+	// splitting Message States
+	const [splitCipher, setSplitCipher] = useState<string[]>(cipher.match(/.{1,100}/g) ?? [])
+	const [splitDeciphered, setSplitDeciphered] = useState<string[]>(deciphered.match(/.{1,100}/g) ?? [])
+
+
+	const handleChange = (s: string, i: number) => {
+		const tmp = [...alphabet]
+		tmp[i][2] = s.toUpperCase()
+		setAlphabet(tmp)
+	}
+
+	useEffect(() => {
+		let newMessage = ''
+		for (let i = 0; i < cipher.length; i++) {
+			for (let k = 0; k < alphabet.length; k++) {
+				if (cipher[i] === alphabet[k][0]) {
+					newMessage += alphabet[k][2]
+				}
+			}
+		}
+		setDeciphered(newMessage)
+	}, [alphabet])
+
+	useEffect(() => {
+		setSplitDeciphered(deciphered.match(/.{1,100}/g) ?? [])
+	}, [deciphered])
+
+	const getDecodedFields = () => {
+		return alphabet.map((c, index) => (
+			<TableCell key={`decode-${index}`} align='center' >
+				<WhiteBorderTextField
+					variant='outlined'
+					value={c[2]}
+					sx={{
+						input: { color: 'white', textAlign: 'center', fontSize: '1.75rem', fontFamily: 'monospace', fontWeight: 'bold' },
+						borderColor: 'white',
+						border: { borderColor: 'white' }
+					}}
+					onFocus={(e) => e.target.select()}
+					onChange={(e) => handleChange(e.target.value, index)}
+				/>
+			</TableCell>
+		))
+	}
+	return (
+		<Grid
+			container
+			direction='row'
+			textAlign='center'
+			fontFamily='monospace'
+			color='white'
+			spacing={8}
+			height='fit-content'
+			sx={{ p: '2.5rem' }}
+		>
+			<Grid item xs={12}>
+				<Typography variant='h2' fontFamily='monospace'>
+					Leni Code Tool
+				</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<Typography variant='h4' fontFamily='monospace'>
+					CIPHER
+					<br />
+					<br />
+					{cipher}
+				</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<Typography variant='h4' fontFamily='monospace'>
+					DECODING
+					<br />
+					<br />
+					{spacedCipher}
+					<br />
+					{deciphered}
+				</Typography>
+			</Grid>
+			<Grid
+				item
+				direction='column'
+				xs={12}
+			>
+				<Table>
+					<TableHead>
+						<TableRow sx={{ color: 'white', width: '100%' }}>
+							{defaultAlphabet.map((c, index) => (
+								<TableCell
+									key={`cAlphabet-${index}`}
+									align='center'
+									sx={{ color: 'white', fontSize: '1.75rem', fontFamily: 'monospace', fontWeight: 'bold' }}
+								>
+									{`${c[0]} (${c[1]})`}
+								</TableCell>
+							))}
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						<TableRow>
+							{
+								getDecodedFields()
+							}
+						</TableRow>
+					</TableBody>
+				</Table>
+				<Button
+					variant='outlined'
+					color='error'
+					sx={{ fontSize: '1.75rem', mt: '2rem' }}
+					onClick={() => setAlphabet(defaultAlphabet)}
+				>
+					Reset Alphabet
+				</Button>
+			</Grid>
+		</Grid>
+	)
 }
 
-export default App;
+export default App
