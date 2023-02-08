@@ -278,19 +278,39 @@ function App() {
 							</Typography>
 							<Table sx={{border: '1px solid white'}}>
 								<TableHead>
+
 									<TableRow>
+										<TableCell align='center' sx={{height:'2rem', border: '1px solid white'}}>
+											Occurance
+										</TableCell>
+										{defaultAlphabet.map((c, index) => (
+											<TableCell
+												key={`cAlphabetOccurance-${index}`}
+												align='center'
+											>
+												{`(${c[1]})`}
+											</TableCell>
+										))}
+									</TableRow>
+									<TableRow>
+										<TableCell align='center' sx={{height:'2rem', border: '1px solid white'}}>
+											Coded
+										</TableCell>
 										{defaultAlphabet.map((c, index) => (
 											<TableCell
 												key={`cAlphabet-${index}`}
 												align='center'
 											>
-												{`${c[0]} (${c[1]})`}
+												{c[0]}
 											</TableCell>
 										))}
 									</TableRow>
 								</TableHead>
 								<TableBody>
 									<TableRow>
+										<TableCell align='center' sx={{height:'2rem', border: '1px solid white'}}>
+											Decoded
+										</TableCell>
 										{
 											getDecodedFields()
 										}
@@ -300,7 +320,6 @@ function App() {
 						</Grid>
 					)
 				}
-
 			</Grid>
 		</ThemeProvider>
 	)
