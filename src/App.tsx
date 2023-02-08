@@ -268,7 +268,7 @@ function App() {
 			>
 				<Grid item xs={12}>
 					<Typography variant='h2'>
-					Leni Decoder Tool
+						Leni Decoder Tool
 					</Typography>
 				</Grid>
 				<Grid item xs={6}>
@@ -295,17 +295,17 @@ function App() {
 						variant='outlined'
 						color='info'
 						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
-						onClick={() => setShowVerticalAlphabet(!showVerticalAlphabet)}
+						onClick={() => setShowHorizontalAlphabet(!showHorizontalAlphabet)}
 					>
-						Toggle V-Alphabet
+						Toggle H-Alphabet
 					</Button>
 					<Button
 						variant='outlined'
 						color='info'
 						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
-						onClick={() => setShowHorizontalAlphabet(!showHorizontalAlphabet)}
+						onClick={() => setShowVerticalAlphabet(!showVerticalAlphabet)}
 					>
-						Toggle H-Alphabet
+						Toggle V-Alphabet
 					</Button>
 					<Button
 						variant='outlined'
@@ -371,13 +371,14 @@ function App() {
 						</Grid>
 					)
 				}
-				{ showVerticalAlphabet
+				{
+					showVerticalAlphabet
 					&& (
 						<Grid
 							item
 							textAlign='center'
 							direction='column'
-							xs={3}
+							xs={12} sm={3}
 						>
 							<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 								ALPHABET
