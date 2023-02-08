@@ -251,7 +251,7 @@ function App() {
 					<Button
 						variant='outlined'
 						color='info'
-						sx={{ fontSize: '1.75rem', m: '2rem' }}
+						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
 						onClick={() => setShowAlphabet(!showAlphabet)}
 					>
 						{ showAlphabet ? 'Hide Alphabet' : 'Show Alphabet' }
@@ -259,7 +259,7 @@ function App() {
 					<Button
 						variant='outlined'
 						color='error'
-						sx={{ fontSize: '1.75rem', m: '2rem' }}
+						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
 						onClick={() => setAlphabet(defaultAlphabet)}
 					>
 						Reset Alphabet
