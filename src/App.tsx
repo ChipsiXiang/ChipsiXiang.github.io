@@ -114,7 +114,9 @@ function App() {
 
 	// splitting Message States
 	const [splitCipher, setSplitCipher] = useState<string[]>(cipher.split(' '))
-	const [showAlphabet, setShowAlphabet] = useState<boolean>(true)
+	const [showHorizontalAlphabet, setShowHorizontalAlphabet] = useState<boolean>(true)
+	const [showVerticalAlphabet, setShowVerticalAlphabet] = useState<boolean>(false)
+
 
 	const getSplitLines = () => {
 		const lines = []
@@ -198,7 +200,7 @@ function App() {
 
 	const getDecodedFields = () => {
 		return alphabet.map((c, index) => (
-			<TableCell key={`decode-${index}`} align='center' >
+			<TableCell key={`hDecoded-${index}`} align='center' >
 				<TextField
 					value={c[2]}
 					sx={{
@@ -214,6 +216,46 @@ function App() {
 			</TableCell>
 		))
 	}
+
+	const getAlphabetRow = (_a: [string, number, string], index: number) => {
+		return (
+			<TableRow>
+				<TableCell
+					key={`vOccurance-${index}`}
+					align='center'
+					sx={{border: '1px solid white'}}
+				>
+					{`(${alphabet[index][1]})`}
+				</TableCell>
+				<TableCell
+					key={`vCoded-${index}`}
+					align='center'
+					sx={{border: '1px solid white'}}
+				>
+					{ alphabet[index][0] }
+				</TableCell>
+				<TableCell
+					key={`vDecoded-${index}`}
+					align='center'
+					sx={{border: '1px solid white'}}
+				>
+					<TextField
+						value={alphabet[index][2]}
+						sx={{
+							input: {
+								textAlign: 'center',
+								fontSize: '1.75rem',
+								fontWeight: 'bold'
+							}
+						}}
+						onFocus={(e) => e.target.select()}
+						onChange={(e) => handleChange(e.target.value, index)}
+					/>
+				</TableCell>
+			</TableRow>
+		)
+	}
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Grid
@@ -253,9 +295,17 @@ function App() {
 						variant='outlined'
 						color='info'
 						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
-						onClick={() => setShowAlphabet(!showAlphabet)}
+						onClick={() => setShowVerticalAlphabet(!showVerticalAlphabet)}
 					>
-						{ showAlphabet ? 'Hide Alphabet' : 'Show Alphabet' }
+						Toggle V-Alphabet
+					</Button>
+					<Button
+						variant='outlined'
+						color='info'
+						sx={{ fontSize: '1.75rem', m: '1.5rem' }}
+						onClick={() => setShowHorizontalAlphabet(!showHorizontalAlphabet)}
+					>
+						Toggle H-Alphabet
 					</Button>
 					<Button
 						variant='outlined'
@@ -266,7 +316,8 @@ function App() {
 						Reset Alphabet
 					</Button>
 				</Grid>
-				{ showAlphabet
+				{
+					showHorizontalAlphabet
 					&& (
 						<Grid
 							item
@@ -281,11 +332,11 @@ function App() {
 								<TableHead>
 									<TableRow>
 										<TableCell align='center' sx={{height:'2rem', border: '1px solid white'}}>
-											Occurance
+											Occurrence
 										</TableCell>
 										{defaultAlphabet.map((c, index) => (
 											<TableCell
-												key={`cAlphabetOccurance-${index}`}
+												key={`hOccurence-${index}`}
 												align='center'
 											>
 												{`(${c[1]})`}
@@ -298,7 +349,7 @@ function App() {
 										</TableCell>
 										{defaultAlphabet.map((c, index) => (
 											<TableCell
-												key={`cAlphabet-${index}`}
+												key={`hCoded-${index}`}
 												align='center'
 											>
 												{c[0]}
@@ -315,6 +366,40 @@ function App() {
 											getDecodedFields()
 										}
 									</TableRow>
+								</TableBody>
+							</Table>
+						</Grid>
+					)
+				}
+				{ showVerticalAlphabet
+					&& (
+						<Grid
+							item
+							textAlign='center'
+							direction='column'
+							xs={3}
+						>
+							<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
+								ALPHABET
+							</Typography>
+							<Table sx={{border: '1px solid white'}}>
+								<TableHead>
+									<TableRow>
+										<TableCell align='center' sx={{border: '1px solid white', width: '2rem'}}>
+											Occ
+										</TableCell>
+										<TableCell align='center' sx={{border: '1px solid white'}}>
+											Coded
+										</TableCell>
+										<TableCell align='center' sx={{border: '1px solid white'}}>
+											Decoded
+										</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{
+										alphabet.map((a, index) => getAlphabetRow(a, index))
+									}
 								</TableBody>
 							</Table>
 						</Grid>
