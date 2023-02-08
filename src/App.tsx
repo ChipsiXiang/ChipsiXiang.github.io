@@ -13,20 +13,53 @@ import {
 	TextField, ThemeProvider,
 	Typography
 } from '@mui/material'
+import {grey} from '@mui/material/colors'
+
+const mainWhite = '#FFFFFF'
+
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: mainWhite
+		},
+		secondary: {
+			main: grey[500]
+		}
+	},
+	typography: {
+		fontFamily: 'monospace',
+		allVariants: {
+			color: mainWhite
+		},
+	},
+	components: {
+		MuiTextField: {
+			styleOverrides: {
+				root: {
+					border: `1px solid ${mainWhite}`,
+					borderRadius: '4px',
+				}
+			}
+		},
+		MuiTableCell: {
+			styleOverrides: {
+				root: {
+					input: {
+						color: mainWhite,
+						fontSize: '1.75rem',
+
+					},
+					color: mainWhite,
+					fontWeight: 'bold',
+					fontSize: '1.75rem',
+					textAlign: 'center'
+				}
+			}
+		}
+	}
+})
 
 function App() {
-
-	const WhiteBorderTextField = styled(TextField)`
-		color: white;
-		border-color: white;
-		& label.Mui-focused {
-			color: white;
-		}
-		& .MuiOutlinedInput-root {
-			&.Mui-focused fieldset {
-				border-color: white;
-			}
-		}`
 
 
 	// Encoded Message
@@ -101,13 +134,14 @@ function App() {
 	const getDecodedFields = () => {
 		return alphabet.map((c, index) => (
 			<TableCell key={`decode-${index}`} align='center' >
-				<WhiteBorderTextField
-					variant='outlined'
+				<TextField
 					value={c[2]}
 					sx={{
-						input: { color: 'white', textAlign: 'center', fontSize: '1.75rem', fontFamily: 'monospace', fontWeight: 'bold' },
-						borderColor: 'white',
-						border: { borderColor: 'white' }
+						input: {
+							textAlign: 'center',
+							fontSize: '1.75rem',
+							fontWeight: 'bold'
+						}
 					}}
 					onFocus={(e) => e.target.select()}
 					onChange={(e) => handleChange(e.target.value, index)}
@@ -116,76 +150,75 @@ function App() {
 		))
 	}
 	return (
-		<Grid
-			container
-			direction='row'
-			textAlign='center'
-			fontFamily='monospace'
-			color='white'
-			spacing={8}
-			height='fit-content'
-			sx={{ p: '2.5rem' }}
-		>
-			<Grid item xs={12}>
-				<Typography variant='h2' fontFamily='monospace'>
-					Leni Code Tool
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography variant='h4' fontFamily='monospace'>
-					CIPHER
-					<br />
-					<br />
-					{cipher}
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography variant='h4' fontFamily='monospace'>
-					DECODING
-					<br />
-					<br />
-					{spacedCipher}
-					<br />
-					{deciphered}
-				</Typography>
-			</Grid>
+		<ThemeProvider theme={theme}>
 			<Grid
-				item
-				direction='column'
-				xs={12}
+				container
+				direction='row'
+				textAlign='center'
+				spacing={8}
+				height='fit-content'
+				sx={{ p: '2.5rem' }}
 			>
-				<Table>
-					<TableHead>
-						<TableRow sx={{ color: 'white', width: '100%' }}>
-							{defaultAlphabet.map((c, index) => (
-								<TableCell
-									key={`cAlphabet-${index}`}
-									align='center'
-									sx={{ color: 'white', fontSize: '1.75rem', fontFamily: 'monospace', fontWeight: 'bold' }}
-								>
-									{`${c[0]} (${c[1]})`}
-								</TableCell>
-							))}
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						<TableRow>
-							{
-								getDecodedFields()
-							}
-						</TableRow>
-					</TableBody>
-				</Table>
-				<Button
-					variant='outlined'
-					color='error'
-					sx={{ fontSize: '1.75rem', mt: '2rem' }}
-					onClick={() => setAlphabet(defaultAlphabet)}
+				<Grid item xs={12}>
+					<Typography variant='h2'>
+					Leni Decoder Tool
+					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant='h4'>
+						CIPHER
+						<br />
+						<br />
+						{cipher}
+					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant='h4'>
+					DECODING
+						<br />
+						<br />
+						{spacedCipher}
+						<br />
+						{deciphered}
+					</Typography>
+				</Grid>
+				<Grid
+					item
+					direction='column'
+					xs={12}
 				>
-					Reset Alphabet
-				</Button>
+					<Table sx={{ width: '100%' }}>
+						<TableHead>
+							<TableRow>
+								{defaultAlphabet.map((c, index) => (
+									<TableCell
+										key={`cAlphabet-${index}`}
+										align='center'
+									>
+										{`${c[0]} (${c[1]})`}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							<TableRow>
+								{
+									getDecodedFields()
+								}
+							</TableRow>
+						</TableBody>
+					</Table>
+					<Button
+						variant='outlined'
+						color='error'
+						sx={{ fontSize: '1.75rem', mt: '2rem' }}
+						onClick={() => setAlphabet(defaultAlphabet)}
+					>
+						Reset Alphabet
+					</Button>
+				</Grid>
 			</Grid>
-		</Grid>
+		</ThemeProvider>
 	)
 }
 
