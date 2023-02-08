@@ -1,5 +1,6 @@
 {
   "name": "leni-code-cracker",
+  "homepage": "https://ChipsiXiang.github.io",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -22,7 +23,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +52,7 @@
     "eslint-config-xo": "^0.43.1",
     "eslint-config-xo-typescript": "^0.55.1",
     "eslint-plugin-react": "^7.32.2",
+    "gh-pages": "^5.0.0",
     "typescript": "^4.9.5"
   }
 }
