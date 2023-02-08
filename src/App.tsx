@@ -278,7 +278,6 @@ function App() {
 							</Typography>
 							<Table sx={{border: '1px solid white'}}>
 								<TableHead>
-
 									<TableRow>
 										<TableCell align='center' sx={{height:'2rem', border: '1px solid white'}}>
 											Occurance
