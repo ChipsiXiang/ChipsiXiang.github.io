@@ -287,7 +287,7 @@ function App() {
 						Leni Decoder Tool
 					</Typography>
 				</Grid>
-				<Grid item xs={6}>
+				<Grid item xs={12} md={6}>
 					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						CIPHER
 					</Typography>
@@ -300,7 +300,7 @@ function App() {
 						onChange={(e) => setCipher(e.target.value)}
 					/>
 				</Grid>
-				<Grid item xs={6}>
+				<Grid item xs={12} md={6}>
 					<Typography variant='h4' sx={{textDecoration: 'underline'}} pb='2rem'>
 						DECODING
 					</Typography>
