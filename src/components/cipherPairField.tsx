@@ -3,9 +3,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 interface CipherPairFieldInterface {
-    title: string
-    content: string,
-    setContent: (s: string) => void,
+	title: string
+	content: string,
+	setContent: (s: string) => void,
 }
 
 const CipherPairField: React.FC<CipherPairFieldInterface> = ({
@@ -35,4 +35,5 @@ CipherPairField.propTypes = {
 	content: PropTypes.string.isRequired,
 	setContent: PropTypes.func.isRequired,
 };
+
 export default CipherPairField;

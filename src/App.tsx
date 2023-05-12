@@ -24,8 +24,8 @@ function App() {
 	// ToDo: adjust alphabet table
 	// ToDo: make cipher alphabet adjustable
 
-
-	const [cipher, setCipher] = useState<string>("10S5C60 26X5S7F T16V18U50 29C518 N9M12S15050 C5S7F");
+	const defaultCipher = "10S5C60 26X5S7F T16V18U50 29C518 N9M12S15050 C5S7F";
+	const [cipher, setCipher] = useState<string>(defaultCipher);
 	const [deciphered, setDeciphered] = useState<string>("");
 
 	const defaultAlphabet: [string, number, string][] = [];
@@ -177,6 +177,14 @@ function App() {
 		));
 	};
 
+	const resetAlphabet = () => {
+		const tmpAlphabet = [...alphabet];
+		for(const a of tmpAlphabet) {
+			a[2] = "_";
+		}
+		setAlphabet(tmpAlphabet)
+	};
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Grid
@@ -202,7 +210,7 @@ function App() {
 					content={deciphered}
 					setContent={setDeciphered}
 				/>
-				<Grid item xs={6}>
+				<Grid item xs={12} sm={6}>
 					<Button
 						variant='outlined'
 						color='info'
@@ -238,7 +246,9 @@ function App() {
 						variant='outlined'
 						color='error'
 						sx={{ fontSize: "1.75rem", m: "1.5rem" }}
-						onClick={() => setAlphabet(defaultAlphabet)}
+						onClick={() => {
+							resetAlphabet();
+						}}
 					>
 						Reset Alphabet
 					</Button>
