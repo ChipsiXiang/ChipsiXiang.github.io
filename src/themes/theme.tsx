@@ -57,7 +57,7 @@ const theme = createTheme ({
 					},
 					color: mainWhite,
 					fontWeight: "bold",
-					fontSize: "1.75rem",
+					fontSize: "1.5rem",
 					textAlign: "center"
 				}
 			}
