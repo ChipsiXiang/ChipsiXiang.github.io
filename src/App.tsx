@@ -131,9 +131,6 @@ function App() {
 	};
 
 	const handleCipherInput = (s: string, i: number) => {
-		if(s.length > 1) {
-			return;
-		}
 		let letter = s;
 		const tmp = [...alphabet];
 		if(letter === " ") {
